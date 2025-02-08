@@ -1,5 +1,6 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +11,7 @@ import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityTodayBinding
 import com.vozmediano.vozmedianonasa.domain.model.Photo
 
-class PhotoListAdapter(val onItemClick: (Photo) -> Unit) : ListAdapter<Photo, PhotoListAdapter.PhotoViewHolder>(DIFF_CALLBACK) {
+class PhotoListAdapter(var onItemClick: (Photo) -> Unit) : ListAdapter<Photo, PhotoListAdapter.PhotoViewHolder>(DIFF_CALLBACK) {
 
 
     class PhotoViewHolder(
@@ -30,7 +31,12 @@ class PhotoListAdapter(val onItemClick: (Photo) -> Unit) : ListAdapter<Photo, Ph
             binding.explanation.text = photo.explanation
 
             itemView.setOnClickListener { onItemClick(photo) }
-
+            binding.imageView.setOnClickListener {
+                val context = binding.imageView.context
+                val intent = Intent(context, FullscreenActivity::class.java)
+                intent.putExtra("hdurl", photo.hdurl)
+                context.startActivity(intent)
+            }
 
         }
     }

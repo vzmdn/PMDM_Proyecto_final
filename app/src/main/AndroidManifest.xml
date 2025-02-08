@@ -16,6 +16,9 @@
         android:theme="@style/Theme.VozmedianoNasa"
         tools:targetApi="31">
         <activity
+            android:name=".ui.FullscreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.PickDateActivity"
             android:exported="false" />
         <activity

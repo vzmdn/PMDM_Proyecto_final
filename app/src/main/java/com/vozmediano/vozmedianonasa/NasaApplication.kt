@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class NasaApplication : Application() {
-    val API_TOKEN = "6p6H33qJfuN0arNeAF4coPstDFuDBsXI04Df1NLJ"
+    val API_TOKEN = "DEMO_KEY"
 
     lateinit var photoRepository: PhotoRepository
 

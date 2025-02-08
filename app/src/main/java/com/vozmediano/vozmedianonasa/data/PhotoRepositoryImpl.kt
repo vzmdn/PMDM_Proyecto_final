@@ -8,7 +8,6 @@ import com.vozmediano.vozmedianonasa.domain.model.Photo
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 class PhotoRepositoryImpl(
     private val photoDao: PhotoDao,

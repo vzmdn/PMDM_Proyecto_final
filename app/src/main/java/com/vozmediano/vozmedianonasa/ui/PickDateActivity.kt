@@ -1,5 +1,6 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -46,6 +47,12 @@ class PickDateActivity : AppCompatActivity() {
             binding.title.text = photo.title
             binding.date.text = photo.date
             binding.explanation.text = photo.explanation
+
+            binding.imageView.setOnClickListener {
+                val intent = Intent(this, FullscreenActivity::class.java)
+                intent.putExtra("hdurl", photo.hdurl)
+                startActivity(intent)
+            }
         }
     }
 }
