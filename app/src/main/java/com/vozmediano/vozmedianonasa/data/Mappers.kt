@@ -1,14 +1,29 @@
 package com.vozmediano.vozmedianonasa.data
 
+import com.vozmediano.vozmedianonasa.data.local.entities.PhotoEntity
 import com.vozmediano.vozmedianonasa.data.network.model.PhotoResponse
 import com.vozmediano.vozmedianonasa.domain.model.Photo
 
+fun PhotoResponse.toDomain() = Photo(
+    date = date,
+    explanation = explanation ?: "",
+    hdurl = hdurl ?: "",
+    title = title ?: "",
+    url = url ?: ""
+)
 
-fun PhotoResponse.toDomain() =
-    Photo(
-        date,
-        explanation ?: "",
-        hdurl ?: "",
-        title ?: "",
-        url ?: ""
-    )
+fun Photo.toDatabase() = PhotoEntity(
+    date = date,
+    explanation = explanation,
+    hdurl = hdurl,
+    title = title,
+    url = url
+)
+
+fun PhotoEntity.toDomain() = Photo(
+    date = date,
+    explanation = explanation,
+    hdurl = hdurl,
+    title = title,
+    url = url
+)

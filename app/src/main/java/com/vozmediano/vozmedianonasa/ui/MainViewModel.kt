@@ -1,5 +1,6 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,8 +22,12 @@ class MainViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
     fun fetchPhoto(date:String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val photo = photoRepository.fetchPhoto(date)
-            _photo.postValue(photo)
+            try {
+                val photo = photoRepository.fetchPhoto(date)
+                _photo.postValue(photo)
+            } catch (e: Exception) {
+                Log.i("Tests", "Error fetching photo: ${e.message.orEmpty()}")
+            }
         }
 
     }

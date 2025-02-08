@@ -1,5 +1,6 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,8 +26,12 @@ class ThisWeekViewModel (val photoRepository: PhotoRepository): ViewModel() {
     fun fetchPhotos(startDate:String,endDate:String) {
         _loading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
-                val photoList = photoRepository.fetchPhotos(startDate,endDate)
-                _photos.postValue(photoList)
+                try {
+                    val photoList = photoRepository.fetchPhotos(startDate, endDate)
+                    _photos.postValue(photoList)
+                } catch (e: Exception) {
+                    Log.i("Tests", "${e.printStackTrace()}")
+                }
                 _loading.postValue(false)
         }
     }
