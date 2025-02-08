@@ -49,12 +49,12 @@ class MainActivity : AppCompatActivity() {
             binding.cardTitle.text = photo.title
         }
 
-        binding.infoBtn.setOnClickListener{
+        binding.infoBtn.setOnClickListener {
             binding.infoBtn.visibility = android.view.View.GONE
             binding.infoCardView.visibility = android.view.View.VISIBLE
         }
 
-        binding.infoCardView.setOnClickListener{
+        binding.infoCardView.setOnClickListener {
             binding.infoBtn.visibility = android.view.View.VISIBLE
             binding.infoCardView.visibility = android.view.View.GONE
         }
@@ -91,10 +91,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.i("", "date is not valid")
             }
-
         }
+    }
 
-        }
     fun isDateValid(): Boolean {
         val localDate: LocalDate
         val year = binding.year.value
@@ -106,23 +105,16 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Date is not valid", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(localDate.isAfter(LocalDate.now())) {
+        if (localDate.isAfter(LocalDate.now())) {
             Toast.makeText(this, "I can't get a picture from the future", Toast.LENGTH_SHORT).show()
             return false
         }
-        if(localDate.isBefore(LocalDate.of(1995, 6, 16))) {
+        if (localDate.isBefore(LocalDate.of(1995, 6, 16))) {
             Toast.makeText(this, "Minimum date is June 16, 1995", Toast.LENGTH_SHORT).show()
             return false
         }
         return true
 
-
-
     }
-
-
-
-
-
 
 }

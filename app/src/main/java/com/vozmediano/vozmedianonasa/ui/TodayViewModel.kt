@@ -16,24 +16,19 @@ import kotlinx.coroutines.launch
 
 class TodayViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
-    private val _loading = MutableLiveData(true)
-    val loading = _loading
-
     private val _photo = MutableLiveData<Photo>()
     val photo: LiveData<Photo> = _photo
 
-fun fetchPhoto() {
-    _loading.postValue(true)
-    viewModelScope.launch(Dispatchers.IO) {
-        try {
-            val photo = photoRepository.fetchPhoto()
-            _photo.postValue(photo)
-        } catch (e: Exception) {
-            Log.i("Tests", "${e.printStackTrace()}")
+    fun fetchPhoto() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val photo = photoRepository.fetchPhoto()
+                _photo.postValue(photo)
+            } catch (e: Exception) {
+                Log.i("Tests", "${e.printStackTrace()}")
+            }
         }
-            _loading.postValue(false)
-        }
-}
+    }
 
     companion object {
         val Factory = viewModelFactory {

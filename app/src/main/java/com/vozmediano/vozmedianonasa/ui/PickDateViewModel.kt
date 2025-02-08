@@ -15,14 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PickDateViewModel(val photoRepository: PhotoRepository): ViewModel() {
-    private val _loading = MutableLiveData(true)
-    val loading = _loading
 
     private val _photo = MutableLiveData<Photo>()
     val photo: LiveData<Photo> = _photo
 
     fun fetchPhoto(date: String) {
-        _loading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val photo = photoRepository.fetchPhoto(date)
@@ -30,7 +27,6 @@ class PickDateViewModel(val photoRepository: PhotoRepository): ViewModel() {
                 } catch (e: Exception) {
                     Log.i("Tests", "${e.printStackTrace()}")
                 }
-                _loading.postValue(false)
         }
     }
 
