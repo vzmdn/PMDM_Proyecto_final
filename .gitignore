@@ -1,0 +1,63 @@
+# Gradle files
+.gradle/
+**/build/
+**/out/
+!gradle-wrapper.jar
+
+# Local configuration
+/local.properties
+**/local.properties
+**/*.keystore
+**/*.jks
+
+# IntelliJ/Android Studio files
+.idea/
+**/.idea/
+**/captures/
+
+# Log files
+*.log
+
+# Compiled files
+*.dex
+*.class
+*.jar
+
+# Generated assets
+**/generated/
+
+# NDK files
+**/obj/
+**/libs/
+
+# Miscellaneous
+*.iml
+*.hprof
+*.DS_Store
+*.swp
+*.swo
+*.orig
+
+# APKs
+*.apk
+*.aab
+
+# Gradle Wrapper
+.gradle/
+**/wrapper/dists/
+**/wrapper/gradle-wrapper.jar
+
+# Google Services
+google-services.json
+firebase/
+
+# Flutter-related (if applicable)
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+pubspec.lock
+
+# Dependency caches
+/caches/
+/tmp/
