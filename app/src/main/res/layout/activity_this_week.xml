@@ -17,5 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/activity_today"
+        android:layout_marginBottom="20dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
