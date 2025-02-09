@@ -3,4 +3,8 @@
     <string name="today">TODAY</string>
     <string name="this_week">THIS WEEK</string>
     <string name="pick_date">PICK DATE</string>
+    <string name="invalid_date">Date is not valid</string>
+    <string name="future_date">I can\'t get a picture from the future</string>
+    <string name="minimum_date">Minimum date is June 16, 1995</string>
+
 </resources>

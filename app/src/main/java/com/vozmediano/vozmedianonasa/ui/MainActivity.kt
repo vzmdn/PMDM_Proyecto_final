@@ -102,15 +102,15 @@ class MainActivity : AppCompatActivity() {
         try {
             localDate = LocalDate.of(year, month, day)
         } catch (e: Exception) {
-            Toast.makeText(this, "Date is not valid", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.invalid_date, Toast.LENGTH_SHORT).show()
             return false
         }
         if (localDate.isAfter(LocalDate.now())) {
-            Toast.makeText(this, "I can't get a picture from the future", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.future_date, Toast.LENGTH_SHORT).show()
             return false
         }
         if (localDate.isBefore(LocalDate.of(1995, 6, 16))) {
-            Toast.makeText(this, "Minimum date is June 16, 1995", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.minimum_date, Toast.LENGTH_SHORT).show()
             return false
         }
         return true

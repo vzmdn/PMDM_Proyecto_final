@@ -4,4 +4,7 @@
     <string name="today">HOY</string>
     <string name="this_week">ESTA SEMANA</string>
     <string name="pick_date">ELEGIR FECHA</string>
+    <string name="invalid_date">La fecha no es válida</string>
+    <string name="future_date">No puedo conseguir una foto del futuro</string>
+    <string name="minimum_date">La fecha mínima es 16/6/1995</string>
 </resources>
