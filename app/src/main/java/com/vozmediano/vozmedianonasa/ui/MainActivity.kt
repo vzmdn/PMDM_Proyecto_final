@@ -17,7 +17,7 @@ import java.time.YearMonth
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.year.setMaxValue(YearMonth.now().year)
         binding.year.setMinValue(1995)
-        binding.year.value = YearMonth.now().year;
+        binding.year.value = YearMonth.now().year
         binding.month.maxValue = 12
         binding.month.minValue = 1
         binding.month.value = LocalDate.now().monthValue
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun isDateValid(): Boolean {
+    private fun isDateValid(): Boolean {
         val localDate: LocalDate
         val year = binding.year.value
         val month = binding.month.value
