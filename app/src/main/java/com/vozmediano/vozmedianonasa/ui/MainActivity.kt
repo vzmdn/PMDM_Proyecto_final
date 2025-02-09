@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val date = LocalDate.now().minusDays(365).toString()
+        val yearAgo = LocalDate.now().minusDays(365).toString()
 
-        viewModel.fetchPhoto(date)
+        viewModel.fetchPhoto(yearAgo)
 
         viewModel.photo.observe(this) { photo ->
             Glide
@@ -69,15 +69,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.year.setMaxValue(YearMonth.now().year);
-        binding.year.setMinValue(1995);
+        binding.year.setMaxValue(YearMonth.now().year)
+        binding.year.setMinValue(1995)
         binding.year.value = YearMonth.now().year;
-        binding.month.maxValue = 12;
-        binding.month.minValue = 1;
-        binding.month.value = LocalDate.now().monthValue;
-        binding.day.maxValue = 31;
-        binding.day.minValue = 1;
-        binding.day.value = LocalDate.now().dayOfMonth;
+        binding.month.maxValue = 12
+        binding.month.minValue = 1
+        binding.month.value = LocalDate.now().monthValue
+        binding.day.maxValue = 31
+        binding.day.minValue = 1
+        binding.day.value = LocalDate.now().dayOfMonth
 
         binding.pickDate.setOnClickListener {
             val year = binding.year.value
