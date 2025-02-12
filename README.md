@@ -6,7 +6,7 @@ La API elegida para el proyecto ha sido APOD. Esta API es una de las múltiples 
 
 ## Bloques de la aplicación
 
-La aplicación consta de 4 bloques principales
+La aplicación consta de 4 bloques principales.
 
 ### 1. Pantalla de inicio
 Para la pantalla de inicio se ha optado por establecer como fondo de la aplicación, la foto correspondiente a la fecha actual un año atrás. La llamada a la API se hace restando 365 a la fecha de hoy. En esta pantalla de inicio también contamos con distintos botones, los cuales enlazan con el resto de bloques principales, y un botón de información el cuál nos muestra el título y la fecha de la foto de la pantalla principal.
