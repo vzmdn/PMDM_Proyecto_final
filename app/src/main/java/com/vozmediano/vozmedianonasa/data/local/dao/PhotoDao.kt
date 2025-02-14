@@ -7,15 +7,11 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.vozmediano.vozmedianonasa.data.local.entities.PhotoEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Dao
 interface PhotoDao {
     @Query("SELECT * FROM photos WHERE date BETWEEN :startDate AND :endDate")
     suspend fun getAll(startDate: String, endDate: String): List<PhotoEntity>
-
-    @Query("SELECT * FROM photos")
-    fun getAllObservable() : Flow<List<PhotoEntity>>
 
     @Query("SELECT * FROM photos WHERE date = :date")
     fun getPhotoByDate(date: String): Flow<PhotoEntity>

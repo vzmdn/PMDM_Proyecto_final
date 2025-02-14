@@ -6,7 +6,6 @@ import com.vozmediano.vozmedianonasa.data.network.api.PhotoService
 import com.vozmediano.vozmedianonasa.domain.PhotoRepository
 import com.vozmediano.vozmedianonasa.domain.model.Photo
 import kotlinx.coroutines.flow.first
-import java.time.LocalDate
 
 class PhotoRepositoryImpl(
     private val photoDao: PhotoDao,
