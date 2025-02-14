@@ -7,7 +7,6 @@ import com.vozmediano.vozmedianonasa.domain.PhotoRepository
 import com.vozmediano.vozmedianonasa.domain.model.Photo
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class PhotoRepositoryImpl(
     private val photoDao: PhotoDao,
@@ -16,41 +15,43 @@ class PhotoRepositoryImpl(
 
     override suspend fun fetchPhotos(startDate: String, endDate: String): List<Photo> {
         return try {
+            val cachedPhotos = photoDao.getAll(startDate, endDate).map { it.toDomain() }
+            cachedPhotos
+
+        } catch (ex: Exception) {
+            Log.d("Tests", ex.message.orEmpty())
             val photosResponse = photoService.getPhotos(startDate, endDate)
             val photos = photosResponse.map { it.toDomain() }
             photoDao.insertAll(photos.map { it.toDatabase() })
             photos
-        } catch (ex: Exception) {
-            Log.d("Tests", ex.message.orEmpty())
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val startDate = LocalDate.now().minusDays(8).format(formatter)
-            val endDate = LocalDate.now().minusDays(1).format(formatter)
-            photoDao.getAll(startDate,endDate).map { it.toDomain() }
         }
     }
 
-    override suspend fun fetchPhoto(): Photo {
+
+   override suspend fun fetchPhoto(): Photo {
         return try {
+            val cachedPhoto = photoDao.getPhotoByDate(LocalDate.now().toString()).first().toDomain()
+            cachedPhoto
+        } catch (ex: Exception) {
+            Log.d("Tests", ex.message.orEmpty())
             val photoResponse = photoService.getPhoto()
             val photo = photoResponse.toDomain()
             photoDao.insertAll(listOf(photo.toDatabase()))
             photo
-        } catch (ex: Exception) {
-            Log.d("Tests", ex.message.orEmpty())
-            photoDao.getPhotoByDate(LocalDate.now().toString()).first().toDomain()
         }
     }
 
     override suspend fun fetchPhoto(date: String): Photo {
-    return try {
-        val photoResponse = photoService.getPhoto(date)
-        val photo = photoResponse.toDomain()
-        photoDao.insertAll(listOf(photo.toDatabase()))
-        photo
-    } catch (ex: Exception) {
-        Log.d("Tests", "Error fetching photo from network: ${ex.message.orEmpty()}")
-        val photoFromDb = photoDao.getPhotoByDate(date).first().toDomain()
-        photoFromDb
+        return try {
+            val cachedPhoto = photoDao.getPhotoByDate(date).first().toDomain()
+            cachedPhoto
+
+        } catch (ex: Exception) {
+            Log.d("Tests", "Error fetching photo from network: ${ex.message.orEmpty()}")
+            val photoResponse = photoService.getPhoto(date)
+            val photo = photoResponse.toDomain()
+            photoDao.insertAll(listOf(photo.toDatabase()))
+            photo
+        }
     }
-}
 }
