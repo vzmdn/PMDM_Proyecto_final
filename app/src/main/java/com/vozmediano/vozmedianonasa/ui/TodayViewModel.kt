@@ -13,6 +13,7 @@ import com.vozmediano.vozmedianonasa.domain.PhotoRepository
 import com.vozmediano.vozmedianonasa.domain.model.Photo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class TodayViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
@@ -22,7 +23,7 @@ class TodayViewModel(val photoRepository: PhotoRepository) : ViewModel() {
     fun fetchPhoto() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val photo = photoRepository.fetchPhoto()
+                val photo = photoRepository.fetchPhoto(LocalDate.now().toString())
                 _photo.postValue(photo)
             } catch (e: Exception) {
                 Log.i("Tests", "${e.printStackTrace()}")

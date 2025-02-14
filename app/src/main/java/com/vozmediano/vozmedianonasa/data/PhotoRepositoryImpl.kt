@@ -16,7 +16,12 @@ class PhotoRepositoryImpl(
     override suspend fun fetchPhotos(startDate: String, endDate: String): List<Photo> {
         return try {
             val cachedPhotos = photoDao.getAll(startDate, endDate).map { it.toDomain() }
-            cachedPhotos
+            if (cachedPhotos.isNotEmpty()) {
+                Log.i("Tests", "Photos from cache: $cachedPhotos")
+                cachedPhotos
+            } else {
+                throw Exception("Cache is empty")
+            }
 
         } catch (ex: Exception) {
             Log.d("Tests", ex.message.orEmpty())
@@ -27,19 +32,6 @@ class PhotoRepositoryImpl(
         }
     }
 
-
-   override suspend fun fetchPhoto(): Photo {
-        return try {
-            val cachedPhoto = photoDao.getPhotoByDate(LocalDate.now().toString()).first().toDomain()
-            cachedPhoto
-        } catch (ex: Exception) {
-            Log.d("Tests", ex.message.orEmpty())
-            val photoResponse = photoService.getPhoto()
-            val photo = photoResponse.toDomain()
-            photoDao.insertAll(listOf(photo.toDatabase()))
-            photo
-        }
-    }
 
     override suspend fun fetchPhoto(date: String): Photo {
         return try {

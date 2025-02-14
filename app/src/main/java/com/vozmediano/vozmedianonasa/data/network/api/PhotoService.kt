@@ -7,9 +7,6 @@ import retrofit2.http.Query
 interface PhotoService {
 
     @GET("apod")
-    suspend fun getPhoto() : PhotoResponse
-
-    @GET("apod")
     suspend fun getPhotos(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String
