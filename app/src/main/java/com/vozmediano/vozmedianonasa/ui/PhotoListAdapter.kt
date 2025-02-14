@@ -15,7 +15,7 @@ class PhotoListAdapter(var onItemClick: (Photo) -> Unit) : ListAdapter<Photo, Ph
 
 
     class PhotoViewHolder(
-        private val binding: ActivityTodayBinding,
+        val binding: ActivityTodayBinding,
         val onItemClick : (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -49,6 +49,7 @@ class PhotoListAdapter(var onItemClick: (Photo) -> Unit) : ListAdapter<Photo, Ph
         }
 
         override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
+            holder.binding.imageView.layout(0,0,0,0)
             holder.bind(currentList[position])
         }
 
