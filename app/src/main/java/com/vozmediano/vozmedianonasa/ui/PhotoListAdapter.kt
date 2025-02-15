@@ -1,6 +1,8 @@
 package com.vozmediano.vozmedianonasa.ui
 
 import android.content.Intent
+import android.graphics.Paint
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -30,13 +32,24 @@ class PhotoListAdapter(var onItemClick: (Photo) -> Unit) : ListAdapter<Photo, Ph
             binding.date.text = photo.date
             binding.explanation.text = photo.explanation
 
+            binding.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
             itemView.setOnClickListener { onItemClick(photo) }
+
             binding.imageView.setOnClickListener {
                 val context = binding.imageView.context
                 val intent = Intent(context, FullscreenActivity::class.java)
                 intent.putExtra("hdurl", photo.hdurl)
                 context.startActivity(intent)
             }
+
+            binding.title.setOnClickListener {
+                val titleText = photo.title.replace(" ", "+")
+                val searchIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=$titleText"))
+                binding.imageView.context.startActivity(searchIntent)
+            }
+
+
 
         }
     }

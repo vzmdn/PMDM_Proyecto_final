@@ -1,6 +1,8 @@
 package com.vozmediano.vozmedianonasa.ui
 
 import android.content.Intent
+import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -40,6 +42,15 @@ class TodayActivity : AppCompatActivity() {
             binding.title.text = photo.title
             binding.date.text = photo.date
             binding.explanation.text = photo.explanation
+
+            binding.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
+            binding.title.setOnClickListener {
+                val titleText = photo.title.replace(" ", "+")
+                val searchIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=$titleText"))
+                startActivity(searchIntent)
+
+            }
 
             binding.imageView.setOnClickListener {
                 val intent = Intent(this, FullscreenActivity::class.java)
