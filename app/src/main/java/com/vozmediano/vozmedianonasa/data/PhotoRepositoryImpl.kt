@@ -15,7 +15,7 @@ class PhotoRepositoryImpl(
     override suspend fun fetchPhotos(startDate: String, endDate: String): List<Photo> {
         return try {
             val cachedPhotos = photoDao.getAll(startDate, endDate).map { it.toDomain() }
-            if (cachedPhotos.isNotEmpty()) {
+            if (cachedPhotos.size > 6) {
                 Log.i("Tests", "Photos from cache: $cachedPhotos")
                 cachedPhotos
             } else {

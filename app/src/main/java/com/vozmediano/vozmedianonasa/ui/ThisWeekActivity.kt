@@ -34,7 +34,7 @@ class ThisWeekActivity : AppCompatActivity() {
         binding.recyclerView.adapter = photoAdapter
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val startDate = LocalDate.now().minusDays(8).format(formatter)
+        val startDate = LocalDate.now().minusDays(7).format(formatter)
         val endDate = LocalDate.now().minusDays(1).format(formatter)
 
         viewModel.fetchPhotos(startDate, endDate)
