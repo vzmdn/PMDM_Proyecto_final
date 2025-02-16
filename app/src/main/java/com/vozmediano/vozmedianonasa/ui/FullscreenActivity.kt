@@ -1,52 +1,54 @@
 package com.vozmediano.vozmedianonasa.ui
 
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityFullscreenBinding
 
-class FullscreenActivity : AppCompatActivity() {
+class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListener {
 
     private val binding by lazy { ActivityFullscreenBinding.inflate(layoutInflater) }
-    var fullscreen = true
+    private lateinit var gestureDetector: GestureDetector
+    private var fullscreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        gestureDetector = GestureDetector(this, this).apply {
+            setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
+                override fun onSingleTapConfirmed(e: MotionEvent) = false
+                override fun onDoubleTap(e: MotionEvent) = false
+                override fun onDoubleTapEvent(e: MotionEvent) = false
+            })
+        }
+
         fullscreenSwap(fullscreen)
 
-        val hdurl = intent.getStringExtra("hdurl")
-
         Glide.with(this)
-            .load(hdurl)
+            .load(intent.getStringExtra("hdurl"))
             .error(R.drawable.baseline_image_not_supported_24)
             .into(binding.fullscreenImageView)
 
-        binding.fullscreenImageView.setOnClickListener {
-            fullscreenSwap(fullscreen)
-            fullscreen = !fullscreen
-        }
+        binding.returnButton.setOnClickListener { finish() }
+        binding.menuButton.setOnClickListener { Toast.makeText(this, "TODO: Descargar/Compartir imagen", Toast.LENGTH_LONG).show() }
 
-        binding.returnButton.setOnClickListener {
-            finish()
-        }
-
-        binding.menuButton.setOnClickListener {
-            Toast.makeText(this, "Menu", Toast.LENGTH_LONG).show()
-        }
+        binding.root.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event); true }
     }
 
-
-
-    fun fullscreenSwap(fullscreen: Boolean) {
+    private fun fullscreenSwap(fullscreen: Boolean) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (fullscreen) {
             windowInsetsController?.hide(WindowInsetsCompat.Type.systemBars())
+            windowInsetsController?.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             binding.returnButton.visibility = android.view.View.GONE
             binding.menuButton.visibility = android.view.View.GONE
         } else {
@@ -54,5 +56,41 @@ class FullscreenActivity : AppCompatActivity() {
             binding.returnButton.visibility = android.view.View.VISIBLE
             binding.menuButton.visibility = android.view.View.VISIBLE
         }
+        this.fullscreen = fullscreen
     }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        event?.let { onTouchEvent(it) }
+        return super.dispatchTouchEvent(event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event?.let {
+            if (binding.menuButton.isPressed) return false
+
+            return gestureDetector.onTouchEvent(it) || super.onTouchEvent(it)
+        }
+        return false
+    }
+
+
+    override fun onSingleTapUp(e: MotionEvent): Boolean {
+        fullscreenSwap(!fullscreen)
+        return true
+    }
+
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+        e1?.let {
+            if (Math.abs(e2.y - e1.y) > 100 && Math.abs(velocityY) > 100) {
+                fullscreenSwap(!fullscreen)
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun onDown(e: MotionEvent) = true
+    override fun onShowPress(e: MotionEvent) {}
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float) = true
+    override fun onLongPress(e: MotionEvent) {}
 }
