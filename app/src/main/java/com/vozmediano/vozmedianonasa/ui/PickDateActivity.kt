@@ -10,9 +10,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityTodayBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class PickDateActivity : AppCompatActivity() {
 
@@ -34,34 +39,42 @@ class PickDateActivity : AppCompatActivity() {
 
         val date = intent.getStringExtra("date")
 
-        try{
-            viewModel.fetchPhoto(date!!)
-        } catch (e: Exception) {
-            Log.e("", "", e)
-        }
+        viewModel.fetchPhoto(date!!)
 
-        viewModel.photo.observe(this) { photo ->
-            Glide
-                .with(this)
-                .load(photo.url)
-                .error(R.drawable.baseline_image_not_supported_24)
-                .into(binding.imageView)
-            binding.title.text = photo.title
-            binding.date.text = photo.date
-            binding.explanation.text = photo.explanation
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.photo.collectLatest { photo ->
+                    photo?.let {
+                        Glide
+                            .with(binding.imageView.context)
+                            .load(it.url)
+                            .error(R.drawable.baseline_image_not_supported_24)
+                            .into(binding.imageView)
 
-            binding.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                        binding.title.text = it.title
+                        binding.date.text = it.date
+                        binding.explanation.text = it.explanation
+                        binding.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
-            binding.title.setOnClickListener {
-                val titleText = photo.title.replace(" ", "+")
-                val searchIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=$titleText"))
-                startActivity(searchIntent)
-            }
+                        binding.title.setOnClickListener {
+                            val titleText = photo.title.replace(" ", "+")
+                            val searchIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.google.com/search?q=$titleText")
+                            )
+                            startActivity(searchIntent)
+                        }
 
-            binding.imageView.setOnClickListener {
-                val intent = Intent(this, FullscreenActivity::class.java)
-                intent.putExtra("hdurl", photo.hdurl)
-                startActivity(intent)
+                        binding.imageView.setOnClickListener {
+                            val intent = Intent(
+                                this@PickDateActivity,
+                                FullscreenActivity::class.java
+                            )
+                            intent.putExtra("hdurl", photo.hdurl)
+                            startActivity(intent)
+                        }
+                    }
+                }
             }
         }
     }

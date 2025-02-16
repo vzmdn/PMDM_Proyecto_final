@@ -7,9 +7,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityThisWeekBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -39,13 +44,19 @@ class ThisWeekActivity : AppCompatActivity() {
 
         viewModel.fetchPhotos(startDate, endDate)
 
-        viewModel.photos.observe(this) { photos ->
-            photoAdapter.submitList(photos)
-            photoAdapter.onItemClick = { photo ->
-                val intent = Intent(this, FullscreenActivity::class.java)
-                intent.putExtra("hdurl", photo.hdurl)
-                startActivity(intent)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.photos.collectLatest { photos ->
+                    photoAdapter.submitList(photos)
+                }
             }
         }
+
+        photoAdapter.onItemClick = { photo ->
+            val intent = Intent(this, FullscreenActivity::class.java)
+            intent.putExtra("hdurl", photo.hdurl)
+            startActivity(intent)
+        }
+
     }
 }

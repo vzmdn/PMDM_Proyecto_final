@@ -9,9 +9,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -39,14 +44,20 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.fetchPhoto(yearAgo)
 
-        viewModel.photo.observe(this) { photo ->
-            Glide
-                .with(this)
-                .load(photo.url)
-                .error(R.drawable.baseline_image_not_supported_24)
-                .into(binding.imageView)
-            binding.cardDate.text = photo.date
-            binding.cardTitle.text = photo.title
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.photo.collectLatest { photo ->
+                    photo?.let {
+                        Glide
+                            .with(binding.imageView.context)
+                            .load(it.url)
+                            .error(R.drawable.baseline_image_not_supported_24)
+                            .into(binding.imageView)
+                        binding.cardDate.text = it.date
+                        binding.cardTitle.text = it.title
+                    }
+                }
+            }
         }
 
         binding.infoBtn.setOnClickListener {
