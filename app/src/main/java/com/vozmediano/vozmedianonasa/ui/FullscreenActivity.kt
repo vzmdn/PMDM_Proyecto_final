@@ -1,10 +1,10 @@
 package com.vozmediano.vozmedianonasa.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityFullscreenBinding
@@ -12,13 +12,13 @@ import com.vozmediano.vozmedianonasa.databinding.ActivityFullscreenBinding
 class FullscreenActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityFullscreenBinding.inflate(layoutInflater) }
-    var fullscreen = false
+    var fullscreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        hideSystemBars()
+        fullscreenSwap(fullscreen)
 
         val hdurl = intent.getStringExtra("hdurl")
 
@@ -31,23 +31,28 @@ class FullscreenActivity : AppCompatActivity() {
             fullscreenSwap(fullscreen)
             fullscreen = !fullscreen
         }
-    }
 
-    private fun hideSystemBars() {
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController?.let {
-            it.hide(WindowInsetsCompat.Type.systemBars())
-            it.systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        binding.returnButton.setOnClickListener {
+            finish()
+        }
+
+        binding.menuButton.setOnClickListener {
+            Toast.makeText(this, "Menu", Toast.LENGTH_LONG).show()
         }
     }
+
+
 
     fun fullscreenSwap(fullscreen: Boolean) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (fullscreen) {
             windowInsetsController?.hide(WindowInsetsCompat.Type.systemBars())
+            binding.returnButton.visibility = android.view.View.GONE
+            binding.menuButton.visibility = android.view.View.GONE
         } else {
             windowInsetsController?.show(WindowInsetsCompat.Type.systemBars())
+            binding.returnButton.visibility = android.view.View.VISIBLE
+            binding.menuButton.visibility = android.view.View.VISIBLE
         }
     }
 }
