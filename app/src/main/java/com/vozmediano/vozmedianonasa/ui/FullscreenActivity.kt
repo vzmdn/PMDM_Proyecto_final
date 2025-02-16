@@ -1,8 +1,10 @@
 package com.vozmediano.vozmedianonasa.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityFullscreenBinding
@@ -16,14 +18,7 @@ class FullscreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_IMMERSIVE
-            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_FULLSCREEN
-        )
+        hideSystemBars()
 
         val hdurl = intent.getStringExtra("hdurl")
 
@@ -38,21 +33,21 @@ class FullscreenActivity : AppCompatActivity() {
         }
     }
 
-    fun fullscreenSwap(fullscreen: Boolean) {
-        if (fullscreen) {
-            window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-            )
-        } else {
-            window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            )
+    private fun hideSystemBars() {
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController?.let {
+            it.hide(WindowInsetsCompat.Type.systemBars())
+            it.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
 
+    fun fullscreenSwap(fullscreen: Boolean) {
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        if (fullscreen) {
+            windowInsetsController?.hide(WindowInsetsCompat.Type.systemBars())
+        } else {
+            windowInsetsController?.show(WindowInsetsCompat.Type.systemBars())
+        }
     }
 }
