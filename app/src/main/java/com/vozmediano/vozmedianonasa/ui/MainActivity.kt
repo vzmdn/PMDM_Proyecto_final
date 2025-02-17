@@ -2,7 +2,11 @@ package com.vozmediano.vozmedianonasa.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.Gravity
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -13,6 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityMainBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -33,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var date = ""
+        var text = ""
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,21 +60,28 @@ class MainActivity : AppCompatActivity() {
                             .load(it.url)
                             .error(R.drawable.baseline_image_not_supported_24)
                             .into(binding.imageView)
-                        binding.cardDate.text = it.date
-                        binding.cardTitle.text = it.title
+                        date = it.date
+                        text = it.title
                     }
                 }
             }
         }
 
-        binding.infoBtn.setOnClickListener {
-            binding.infoBtn.visibility = android.view.View.GONE
-            binding.infoCardView.visibility = android.view.View.VISIBLE
-        }
+        binding.imageView.setOnClickListener {
+            val snackbar = Snackbar
+                .make(binding.root, "$date $text", Snackbar.LENGTH_INDEFINITE)
 
-        binding.infoCardView.setOnClickListener {
-            binding.infoBtn.visibility = android.view.View.VISIBLE
-            binding.infoCardView.visibility = android.view.View.GONE
+            val snackbarView = snackbar.view
+            val layoutParams = snackbarView.layoutParams as FrameLayout.LayoutParams
+            layoutParams.gravity = Gravity.TOP // Set the gravity to top
+            layoutParams.setMargins(0, 150, 0, 0) // Adjust the top margin if needed
+
+            snackbarView.layoutParams = layoutParams
+
+            snackbar.show()
+            Handler(Looper.getMainLooper()).postDelayed({
+                snackbar.dismiss()
+            }, 8000)
         }
 
         binding.today.setOnClickListener {
