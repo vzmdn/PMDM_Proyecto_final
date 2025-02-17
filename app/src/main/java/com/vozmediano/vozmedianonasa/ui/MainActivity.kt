@@ -1,6 +1,12 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,6 +30,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import android.view.animation.AlphaAnimation
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,12 +77,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.imageView.setOnClickListener {
             val snackbar = Snackbar
-                .make(binding.root, "$date $text", Snackbar.LENGTH_INDEFINITE)
+                .make(binding.root, text, Snackbar.LENGTH_INDEFINITE)
 
             val snackbarView = snackbar.view
             val layoutParams = snackbarView.layoutParams as FrameLayout.LayoutParams
-            layoutParams.gravity = Gravity.TOP // Set the gravity to top
-            layoutParams.setMargins(0, 150, 0, 0) // Adjust the top margin if needed
+            layoutParams.gravity = Gravity.TOP
+            layoutParams.setMargins(0, 150, 0, 0)
 
             snackbarView.layoutParams = layoutParams
 
@@ -82,6 +90,12 @@ class MainActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 snackbar.dismiss()
             }, 8000)
+
+            binding.day.value = extractDay(date)
+            binding.month.value = extractMonth(date)
+            binding.year.value = extractYear(date)
+
+            flashButton(binding.pickDate, 100)
         }
 
         binding.today.setOnClickListener {
@@ -141,5 +155,40 @@ class MainActivity : AppCompatActivity() {
         return true
 
     }
+
+    private fun extractDay(date: String): Int {
+        return date.substring(8, 10).toInt()
+    }
+
+    private fun extractMonth(date: String): Int {
+        return date.substring(5, 7).toInt()
+    }
+    private fun extractYear(date: String): Int {
+        return date.substring(0, 4).toInt()
+    }
+
+
+
+    private fun flashButton(button: Button, duration: Long) {
+        val originalColor = (button.background as? ColorDrawable)?.color ?: Color.TRANSPARENT
+
+        val colorAnimator = ObjectAnimator.ofArgb(
+            button,
+            "backgroundColor",
+            Color.parseColor("#7195D999")
+        )
+        colorAnimator.duration = duration
+        colorAnimator.repeatCount = 3
+        colorAnimator.repeatMode = ObjectAnimator.REVERSE
+        colorAnimator.setEvaluator(ArgbEvaluator())
+        colorAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                button.setBackgroundColor(originalColor)
+            }
+        })
+        colorAnimator.start()
+    }
+
+
 
 }
