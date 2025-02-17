@@ -23,7 +23,7 @@ class PhotoRepositoryImpl(
             }
 
         } catch (ex: Exception) {
-            Log.d("Tests", ex.message.orEmpty())
+            Log.i("Tests", "Error fetching photos from cache: ${ex.message.orEmpty()}")
             val photosResponse = photoService.getPhotos(startDate, endDate)
             val photos = photosResponse.map { it.toDomain() }
             photoDao.insertAll(photos.map { it.toDatabase() })
@@ -38,8 +38,9 @@ class PhotoRepositoryImpl(
             cachedPhoto
 
         } catch (ex: Exception) {
-            Log.d("Tests", "Error fetching photo from network: ${ex.message.orEmpty()}")
+            Log.i("Tests", "Error fetching photo from cache: ${ex.message.orEmpty()}")
             val photoResponse = photoService.getPhoto(date)
+            Log.i("Tests", "Photo response from network: $photoResponse")
             val photo = photoResponse.toDomain()
             photoDao.insertAll(listOf(photo.toDatabase()))
             photo

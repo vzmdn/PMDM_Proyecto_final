@@ -5,5 +5,6 @@ data class Photo (
     val explanation: String,
     val hdurl: String,
     val title: String,
-    val url: String
+    val url: String,
+    val mediaType: String
 )

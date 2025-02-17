@@ -9,7 +9,8 @@ fun PhotoResponse.toDomain() = Photo(
     explanation = explanation ?: "",
     hdurl = hdurl ?: "",
     title = title ?: "",
-    url = url ?: ""
+    url = url ?: "",
+    mediaType = media_type ?: ""
 )
 
 fun Photo.toDatabase() = PhotoEntity(
@@ -17,7 +18,8 @@ fun Photo.toDatabase() = PhotoEntity(
     explanation = explanation,
     hdurl = hdurl,
     title = title,
-    url = url
+    url = url,
+    media_type = mediaType
 )
 
 fun PhotoEntity.toDomain() = Photo(
@@ -25,5 +27,6 @@ fun PhotoEntity.toDomain() = Photo(
     explanation = explanation,
     hdurl = hdurl,
     title = title,
-    url = url
+    url = url,
+    mediaType = media_type
 )
