@@ -1,4 +1,4 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.thisweek
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -17,19 +17,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PickDateViewModel(val photoRepository: PhotoRepository): ViewModel() {
+class ThisWeekViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
-    private val _photo = MutableStateFlow<Photo?>(null)
-    val photo: StateFlow<Photo?> = _photo.asStateFlow()
+    private val _photos = MutableStateFlow<List<Photo?>>(emptyList())
+    val photos: StateFlow<List<Photo?>> = _photos.asStateFlow()
 
-    fun fetchPhoto(date: String) {
+
+    fun fetchPhotos(startDate: String, endDate: String) {
         viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val photo = photoRepository.fetchPhoto(date)
-                    _photo.value = photo
-                } catch (e: Exception) {
-                    Log.i("Tests", "${e.printStackTrace()}")
-                }
+            try {
+                val photoList = photoRepository.fetchPhotos(startDate, endDate)
+                _photos.value = photoList
+            } catch (e: Exception) {
+                Log.i("Tests", "${e.printStackTrace()}")
+            }
         }
     }
 
@@ -37,9 +38,8 @@ class PickDateViewModel(val photoRepository: PhotoRepository): ViewModel() {
         val Factory = viewModelFactory {
             initializer {
                 val application = this[APPLICATION_KEY] as NasaApplication
-                PickDateViewModel(application.photoRepository)
+                ThisWeekViewModel(application.photoRepository)
             }
         }
     }
-
 }

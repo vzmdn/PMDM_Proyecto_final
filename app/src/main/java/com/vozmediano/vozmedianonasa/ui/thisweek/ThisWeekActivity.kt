@@ -1,4 +1,4 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.thisweek
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityThisWeekBinding
+import com.vozmediano.vozmedianonasa.ui.FullscreenActivity
+import com.vozmediano.vozmedianonasa.ui.PhotoListAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate

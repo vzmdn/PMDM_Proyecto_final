@@ -1,4 +1,4 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -16,29 +16,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
-class TodayViewModel(val photoRepository: PhotoRepository) : ViewModel() {
+class MainViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
     private val _photo = MutableStateFlow<Photo?>(null)
     val photo: StateFlow<Photo?> = _photo.asStateFlow()
 
-    fun fetchPhoto() {
+
+    fun fetchPhoto(date:String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val photo = photoRepository.fetchPhoto(LocalDate.now().toString())
+                val photo = photoRepository.fetchPhoto(date)
                 _photo.value = photo
             } catch (e: Exception) {
-                Log.i("Tests", "${e.printStackTrace()}")
+                Log.i("Tests", "Error fetching photo: ${e.message.orEmpty()}")
             }
         }
+
     }
 
     companion object {
         val Factory = viewModelFactory {
             initializer {
                 val application = this[APPLICATION_KEY] as NasaApplication
-                TodayViewModel(application.photoRepository)
+                MainViewModel(application.photoRepository)
             }
         }
     }

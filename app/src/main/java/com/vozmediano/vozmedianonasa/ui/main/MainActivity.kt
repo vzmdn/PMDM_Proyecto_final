@@ -1,4 +1,4 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -31,6 +31,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 import android.widget.Button
+import com.vozmediano.vozmedianonasa.ui.pickdate.PickDateActivity
+import com.vozmediano.vozmedianonasa.ui.thisweek.ThisWeekActivity
+import com.vozmediano.vozmedianonasa.ui.today.TodayActivity
 
 class MainActivity : AppCompatActivity() {
 

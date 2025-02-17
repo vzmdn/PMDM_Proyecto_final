@@ -1,8 +1,6 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.today
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
@@ -16,18 +14,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-class ThisWeekViewModel(val photoRepository: PhotoRepository) : ViewModel() {
+class TodayViewModel(val photoRepository: PhotoRepository) : ViewModel() {
 
-    private val _photos = MutableStateFlow<List<Photo?>>(emptyList())
-    val photos: StateFlow<List<Photo?>> = _photos.asStateFlow()
+    private val _photo = MutableStateFlow<Photo?>(null)
+    val photo: StateFlow<Photo?> = _photo.asStateFlow()
 
-
-    fun fetchPhotos(startDate: String, endDate: String) {
+    fun fetchPhoto() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val photoList = photoRepository.fetchPhotos(startDate, endDate)
-                _photos.value = photoList
+                val photo = photoRepository.fetchPhoto(LocalDate.now().toString())
+                _photo.value = photo
             } catch (e: Exception) {
                 Log.i("Tests", "${e.printStackTrace()}")
             }
@@ -38,8 +36,9 @@ class ThisWeekViewModel(val photoRepository: PhotoRepository) : ViewModel() {
         val Factory = viewModelFactory {
             initializer {
                 val application = this[APPLICATION_KEY] as NasaApplication
-                ThisWeekViewModel(application.photoRepository)
+                TodayViewModel(application.photoRepository)
             }
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package com.vozmediano.vozmedianonasa.ui
+package com.vozmediano.vozmedianonasa.ui.pickdate
 
 import android.content.Intent
 import android.graphics.Paint
@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityTodayBinding
+import com.vozmediano.vozmedianonasa.ui.FullscreenActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.vozmediano.vozmedianonasa.utils.Utils

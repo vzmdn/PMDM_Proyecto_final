@@ -19,16 +19,16 @@
             android:name=".ui.FullscreenActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.PickDateActivity"
+            android:name=".ui.pickdate.PickDateActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.ThisWeekActivity"
+            android:name=".ui.thisweek.ThisWeekActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.TodayActivity"
+            android:name=".ui.today.TodayActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
