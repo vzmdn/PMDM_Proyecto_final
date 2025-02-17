@@ -1,5 +1,6 @@
 package com.vozmediano.vozmedianonasa.ui
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.GestureDetector
@@ -21,6 +22,7 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
     private var lastTouchY = 0f
     private var startTranslationY = 0f
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
