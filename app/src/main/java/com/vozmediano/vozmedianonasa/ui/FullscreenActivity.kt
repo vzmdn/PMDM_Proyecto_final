@@ -24,7 +24,10 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
 
         gestureDetector = GestureDetector(this, this).apply {
             setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-                override fun onSingleTapConfirmed(e: MotionEvent) = false
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    fullscreenSwap(!fullscreen)
+                    return true
+                }
                 override fun onDoubleTap(e: MotionEvent) = false
                 override fun onDoubleTapEvent(e: MotionEvent) = false
             })
@@ -67,27 +70,14 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.let {
             if (binding.menuButton.isPressed) return false
-
             return gestureDetector.onTouchEvent(it) || super.onTouchEvent(it)
         }
         return false
     }
 
+    override fun onSingleTapUp(e: MotionEvent): Boolean = false
 
-    override fun onSingleTapUp(e: MotionEvent): Boolean {
-        fullscreenSwap(!fullscreen)
-        return true
-    }
-
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        e1?.let {
-            if (Math.abs(e2.y - e1.y) > 100 && Math.abs(velocityY) > 100) {
-                fullscreenSwap(!fullscreen)
-                return true
-            }
-        }
-        return false
-    }
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = false
 
     override fun onDown(e: MotionEvent) = true
     override fun onShowPress(e: MotionEvent) {}
