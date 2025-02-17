@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             binding.month.value = extractMonth(date)
             binding.year.value = extractYear(date)
 
-            flashButton(binding.pickDate, 100)
+            flashButton(binding.pickDate)
         }
 
         binding.today.setOnClickListener {
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun flashButton(button: Button, duration: Long) {
+    private fun flashButton(button: Button) {
         val originalColor = (button.background as? ColorDrawable)?.color ?: Color.TRANSPARENT
 
         val colorAnimator = ObjectAnimator.ofArgb(
@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             "backgroundColor",
             Color.parseColor("#7195D999")
         )
-        colorAnimator.duration = duration
+        colorAnimator.duration = 100
         colorAnimator.repeatCount = 3
         colorAnimator.repeatMode = ObjectAnimator.REVERSE
         colorAnimator.setEvaluator(ArgbEvaluator())
