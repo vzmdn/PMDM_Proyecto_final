@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.vozmediano.vozmedianonasa.R
 import com.vozmediano.vozmedianonasa.databinding.ActivityTodayBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.vozmediano.vozmedianonasa.utils.Utils
 
 class PickDateActivity : AppCompatActivity() {
 
@@ -41,41 +43,68 @@ class PickDateActivity : AppCompatActivity() {
 
         viewModel.fetchPhoto(date!!)
 
+        var imageUrl:String? = ""
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.photo.collectLatest { photo ->
-                    photo?.let {
-                        Glide
-                            .with(binding.imageView.context)
-                            .load(it.url)
-                            .error(R.drawable.baseline_image_not_supported_24)
-                            .into(binding.imageView)
-
-                        binding.title.text = it.title
+                    photo?.let { it ->
                         binding.date.text = it.date
                         binding.explanation.text = it.explanation
                         binding.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
-                        binding.title.setOnClickListener {
-                            val titleText = photo.title.replace(" ", "+")
-                            val searchIntent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://www.google.com/search?q=$titleText")
-                            )
-                            startActivity(searchIntent)
+                        if (photo.mediaType == "video") {
+                            binding.title.text = it.title
+                            binding.mediaType.text = "🎥"
+                            imageUrl = Utils.getVideoThumbnail(photo.url)
+                            binding.imageView.setOnClickListener{
+                                Toast.makeText(binding.imageView.context, "Click on the title link to open the video", Toast.LENGTH_SHORT).show()
+                            }
+
+                            binding.title.setOnClickListener {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(photo.url)
+                                )
+                                startActivity(intent)
+                            }
+                        } else {
+                            binding.title.text = it.title
+                            binding.mediaType.text = "📸"
+                            imageUrl = photo.url
+                            binding.imageView.setOnClickListener {
+                                val intent = Intent(
+                                    this@PickDateActivity,
+                                    FullscreenActivity::class.java
+                                )
+                                intent.putExtra("hdurl", photo.hdurl)
+                                startActivity(intent)
+                            }
+
+                            binding.title.setOnClickListener {
+                                val titleText = photo.title.replace(" ", "+")
+                                val searchIntent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.google.com/search?q=$titleText")
+                                )
+                                startActivity(searchIntent)
+                            }
                         }
 
-                        binding.imageView.setOnClickListener {
-                            val intent = Intent(
-                                this@PickDateActivity,
-                                FullscreenActivity::class.java
-                            )
-                            intent.putExtra("hdurl", photo.hdurl)
-                            startActivity(intent)
-                        }
+                        Glide
+                            .with(binding.imageView.context)
+                            .load(imageUrl)
+                            .error(R.drawable.baseline_image_not_supported_24)
+                            .into(binding.imageView)
+
                     }
                 }
             }
         }
     }
+
+
+
+
+
 }

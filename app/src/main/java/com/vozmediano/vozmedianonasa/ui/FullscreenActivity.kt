@@ -1,7 +1,5 @@
 package com.vozmediano.vozmedianonasa.ui
 
-import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -19,10 +17,7 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
     private val binding by lazy { ActivityFullscreenBinding.inflate(layoutInflater) }
     private lateinit var gestureDetector: GestureDetector
     private var fullscreen = true
-    private var lastTouchY = 0f
-    private var startTranslationY = 0f
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -38,7 +33,6 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
             })
         }
 
-        fullscreenSwap(fullscreen)
 
         Glide.with(this)
             .load(intent.getStringExtra("hdurl"))
@@ -48,38 +42,7 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
         binding.returnButton.setOnClickListener { finish() }
         binding.menuButton.setOnClickListener { Toast.makeText(this, "TODO: Descargar/Compartir imagen", Toast.LENGTH_LONG).show() }
 
-        binding.fullscreenImageView.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    lastTouchY = event.rawY
-                    startTranslationY = binding.fullscreenImageView.translationY
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    val deltaY = event.rawY - lastTouchY
-                    binding.fullscreenImageView.translationY = startTranslationY + deltaY
-                }
-                MotionEvent.ACTION_UP -> {
-                    val deltaY = binding.fullscreenImageView.translationY
-                    when {
-                        deltaY > 200 -> finish()
-                        deltaY < -200 -> {
-                            toggleScreenOrientation()
-                            binding.fullscreenImageView.animate().translationY(0f).setDuration(200).start()
-                        }
-                        else -> binding.fullscreenImageView.animate().translationY(0f).setDuration(200).start()
-                    }
-                }
-            }
-            true
-        }
-    }
-
-    private fun toggleScreenOrientation() {
-        requestedOrientation = if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+        binding.root.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event); true }
     }
 
     private fun fullscreenSwap(fullscreen: Boolean) {
@@ -112,7 +75,9 @@ class FullscreenActivity : AppCompatActivity(), GestureDetector.OnGestureListene
     }
 
     override fun onSingleTapUp(e: MotionEvent): Boolean = false
+
     override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = false
+
     override fun onDown(e: MotionEvent) = true
     override fun onShowPress(e: MotionEvent) {}
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float) = true
