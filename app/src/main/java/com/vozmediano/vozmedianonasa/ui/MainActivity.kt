@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
-import android.view.animation.AlphaAnimation
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
