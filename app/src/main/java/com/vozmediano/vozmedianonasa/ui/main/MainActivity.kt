@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.imageView.setOnClickListener {
+        binding.info.setOnClickListener {
             val snackbar = Snackbar
                 .make(binding.root, text, Snackbar.LENGTH_INDEFINITE)
 
